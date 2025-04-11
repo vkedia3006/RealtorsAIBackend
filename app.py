@@ -70,7 +70,7 @@ async def start_facebook_login():
     params = {
         "client_id": FB_APP_ID,
         "redirect_uri": FB_REDIRECT_URI,
-        "scope": "email,public_profile",
+        "scope": "pages_show_list,ads_management,leads_retrieval,pages_read_engagement",
         "response_type": "code",
         "state": "custom_state_token",  # optional
     }
@@ -78,8 +78,29 @@ async def start_facebook_login():
     return JSONResponse(content={"fbLoginUrl": fb_login_url})
 
 @app.get("/facebook-callback")
-async def facebook_callback(code: str, state: str = None):
-    return {"message": "Logged in via Facebook", "code": code}
+async def facebook_callback(code: str):
+    params = {
+        "client_id": FB_APP_ID,
+        "redirect_uri": FB_REDIRECT_URI,
+        "client_secret": FB_APP_SECRET,
+        "code": code
+    }
+    response = requests.get("https://graph.facebook.com/v18.0/oauth/access_token", params=params)
+    data = response.json()
+    access_token = data.get("access_token")
+    
+    # Optionally exchange for long-lived token
+    long_lived_token_resp = requests.get(
+        "https://graph.facebook.com/v18.0/oauth/access_token",
+        params={
+            "grant_type": "fb_exchange_token",
+            "client_id": FB_APP_ID,
+            "client_secret": FB_APP_SECRET,
+            "fb_exchange_token": access_token
+        }
+    )
+    token_data = long_lived_token_resp.json()
+    return token_data
 
 @app.get("/privacy")
 async def privacy_policy():
