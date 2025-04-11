@@ -80,3 +80,10 @@ async def start_facebook_login():
 @app.get("/facebook-callback")
 async def facebook_callback(code: str, state: str = None):
     return {"message": "Logged in via Facebook", "code": code}
+
+@app.get("/privacy")
+async def privacy_policy():
+    return {
+        "title": "Privacy Policy",
+        "message": "This is a placeholder privacy policy for sipcraftandco.com. We do not store any personal data."
+    }
