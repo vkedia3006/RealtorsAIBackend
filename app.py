@@ -3,6 +3,7 @@ from fastapi import FastAPI, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
+import urllib.parse
 
 app = FastAPI()
 
