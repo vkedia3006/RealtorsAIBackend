@@ -14,7 +14,7 @@ VERIFY_TOKEN = "mysecrettoken123"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://www.sipcraftandco.com/"],
+    allow_origins=["https://www.sipcraftandco.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
