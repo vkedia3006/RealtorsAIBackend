@@ -9,6 +9,9 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(b
     token = credentials.credentials
     payload = decode_jwt_token(token)
     user_id = payload.get("user_id")
+    
+    print(payload)
+    print(user_id)
 
     user = await users_collection.find_one({"facebook_id": user_id})
     if not user:
