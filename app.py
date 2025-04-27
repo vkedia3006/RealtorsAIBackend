@@ -24,7 +24,7 @@ app.include_router(privacy_router, prefix="/public")
 app.include_router(webhook_router, prefix="/public")
 
 # Protected Routers
-app.include_router(dashboard_router, prefix="/protected")
+app.include_router(dashboard_router, prefix="/private")
 
 # Root
 @app.get("/")
