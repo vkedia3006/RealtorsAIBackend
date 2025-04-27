@@ -15,10 +15,14 @@ async def start_facebook_login():
 @public_router.get("/facebook-callback")
 async def facebook_callback(code: str = Query(...)):
     token_data = exchange_code_for_token(code)
+    
     access_token = token_data.get("access_token")
+    
     facebook_id = await save_user(access_token)
+    
     app_access_token = create_jwt_token(facebook_id, expires_delta=timedelta(minutes=15))
     app_refresh_token = create_jwt_token(facebook_id, expires_delta=timedelta(days=7))
+    
     redirect_url = (
         f"{FRONTEND_URL}/login-success?"
         f"access_token={app_access_token}&"

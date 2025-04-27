@@ -41,7 +41,6 @@ def exchange_code_for_token(code: str):
     return token_data
 
 async def save_user(access_token: str) -> str:
-    # Fetch Facebook profile
     user_info_resp = requests.get("https://graph.facebook.com/me", params={
         "access_token": access_token,
         "fields": "id,name,email"
@@ -52,14 +51,12 @@ async def save_user(access_token: str) -> str:
     name = user_info.get("name", "")
     email = user_info.get("email", "")
 
-    # Calculate expiry (assuming token is long-lived for 60 days)
     expires_in_seconds = 60 * 24 * 60 * 60  # 60 days
     expires_at = int(time.time()) + expires_in_seconds
 
     existing_user = await users_collection.find_one({"facebook_id": facebook_id})
 
     if existing_user:
-        # Update existing user
         await users_collection.update_one(
             {"facebook_id": facebook_id},
             {"$set": {
@@ -70,7 +67,6 @@ async def save_user(access_token: str) -> str:
             }}
         )
     else:
-        # Insert new user
         await users_collection.insert_one({
             "facebook_id": facebook_id,
             "facebook_access_token": access_token,
@@ -78,7 +74,4 @@ async def save_user(access_token: str) -> str:
             "name": name,
             "email": email
         })
-
-    # Return internal app jwt_token (already done in your flow)
-    jwt_token = create_jwt_token(facebook_id)
-    return jwt_token
+    return facebook_id
