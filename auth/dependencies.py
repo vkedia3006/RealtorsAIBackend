@@ -9,7 +9,12 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(b
     token = credentials.credentials
     payload = decode_jwt_token(token)
     user_id = payload.get("user_id")
+
     user = await users_collection.find_one({"facebook_id": user_id})
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
-    return user
+
+    return {
+        "facebook_id": user.get("facebook_id"),
+        "name": user.get("name", "Facebook User")
+    }

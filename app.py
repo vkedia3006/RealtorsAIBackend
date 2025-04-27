@@ -1,9 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import webhook, facebook_login, protected
+from routes.facebook_login import public_router as facebook_router
+from routes.refresh_token import public_router as refresh_token_router
+from routes.privacy import public_router as privacy_router
+from routes.dashboard import protected_router as dashboard_router
+from routes.webhook import public_router as webhook_router
 
 app = FastAPI()
 
+# CORS Setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://www.sipcraftandco.com"],
@@ -12,11 +17,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routers
-app.include_router(facebook_login.router)
-app.include_router(webhook.router)
-app.include_router(protected.router)
+# Public Routers
+app.include_router(facebook_router, prefix="/public")
+app.include_router(refresh_token_router, prefix="/public")
+app.include_router(privacy_router, prefix="/public")
+app.include_router(webhook_router, prefix="/public")
 
+# Protected Routers
+app.include_router(dashboard_router, prefix="/protected")
+
+# Root
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to the homepage!"}
@@ -25,10 +35,3 @@ async def read_root():
 async def test():
     print("HELLO WORLD")
     return "Hello World!"
-
-@app.get("/privacy")
-async def privacy_policy():
-    return {
-        "title": "Privacy Policy",
-        "message": "This is a placeholder privacy policy for sipcraftandco.com. We do not store any personal data."
-    }
