@@ -1,4 +1,4 @@
-import jwt
+from jose import jwt
 from fastapi import HTTPException
 from core.config import JWT_SECRET
 
