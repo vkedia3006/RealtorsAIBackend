@@ -6,7 +6,7 @@ from auth.jwt_handler import create_jwt_token
 
 public_router = APIRouter()
 
-@router.post("/refresh-token")
+@public_router.post("/refresh-token")
 async def refresh_access_token(refresh_token: str):
     try:
         payload = jwt.decode(refresh_token, JWT_SECRET, algorithms=["HS256"])
