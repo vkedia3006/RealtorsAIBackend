@@ -1,0 +1,151 @@
+{
+    "info": {
+      "name": "Realtors API",
+      "description": "Test suite for your Public and Protected APIs",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Public APIs",
+        "item": [
+          {
+            "name": "Start Facebook Login",
+            "request": {
+              "method": "POST",
+              "header": [],
+              "url": {
+                "raw": "{{API_URL}}/public/start-facebook-login",
+                "host": ["{{API_URL}}"],
+                "path": ["public", "start-facebook-login"]
+              }
+            }
+          },
+          {
+            "name": "Facebook Callback (Simulate manually)",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{API_URL}}/public/facebook-callback?code=testcode",
+                "host": ["{{API_URL}}"],
+                "path": ["public", "facebook-callback"],
+                "query": [
+                  {
+                    "key": "code",
+                    "value": "testcode"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Refresh Token",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"refresh_token\": \"<YOUR_REFRESH_TOKEN>\"\n}"
+              },
+              "url": {
+                "raw": "{{API_URL}}/public/refresh-token",
+                "host": ["{{API_URL}}"],
+                "path": ["public", "refresh-token"]
+              }
+            }
+          },
+          {
+            "name": "Privacy Policy",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{API_URL}}/public/privacy",
+                "host": ["{{API_URL}}"],
+                "path": ["public", "privacy"]
+              }
+            }
+          },
+          {
+            "name": "Webhook Verification (Simulate manually)",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{API_URL}}/public/webhooks?hub.mode=subscribe&hub.verify_token=yourtoken&hub.challenge=12345",
+                "host": ["{{API_URL}}"],
+                "path": ["public", "webhooks"],
+                "query": [
+                  {
+                    "key": "hub.mode",
+                    "value": "subscribe"
+                  },
+                  {
+                    "key": "hub.verify_token",
+                    "value": "yourtoken"
+                  },
+                  {
+                    "key": "hub.challenge",
+                    "value": "12345"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Protected APIs",
+        "item": [
+          {
+            "name": "Dashboard (Protected)",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer <YOUR_ACCESS_TOKEN>",
+                  "type": "text"
+                }
+              ],
+              "url": {
+                "raw": "{{API_URL}}/protected/dashboard",
+                "host": ["{{API_URL}}"],
+                "path": ["protected", "dashboard"]
+              }
+            }
+          },
+          {
+            "name": "Protected Route (Example)",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer <YOUR_ACCESS_TOKEN>",
+                  "type": "text"
+                }
+              ],
+              "url": {
+                "raw": "{{API_URL}}/protected/protected",
+                "host": ["{{API_URL}}"],
+                "path": ["protected", "protected"]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "variable": [
+      {
+        "key": "API_URL",
+        "value": "https://api.yourdomain.com"
+      }
+    ]
+  }
+  

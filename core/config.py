@@ -1,6 +1,6 @@
 FB_APP_ID = "636664199191003"
 FB_APP_SECRET = "db457a2ea5cf9a2112e7e79bcf95115e"
-FB_REDIRECT_URI = "https://api.sipcraftandco.com/facebook-callback"
+FB_REDIRECT_URI = "https://api.sipcraftandco.com/public/facebook-callback"
 VERIFY_TOKEN = "mysecrettoken123"
 JWT_SECRET = "w68Vv2Z9P3b8fw6C0J3eszggNVS07iTyvqYGAsvLQ2yBbsqxhfmXlA2j0zX0MielUghvD0utw9ZmtMd1FEmbBw"
 FRONTEND_URL = "https://www.sipcraftandco.com"
