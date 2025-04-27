@@ -10,7 +10,7 @@ password = quote_plus("Titanium@9876")
 cluster = "cluster0.0ahkyxj.mongodb.net"
 database_name = "sipcraft"
 
-MONGO_URI = f"mongodb+srv://{username}:{password}@{cluster}/{database_name}?retryWrites=true&w=majority"
+MONGO_URI = f"mongodb+srv://{username}:{password}@{cluster}/{database_name}?retryWrites=true&w=majority&ssl=true"
 
 client = AsyncIOMotorClient(MONGO_URI)
 db = client[database_name]
