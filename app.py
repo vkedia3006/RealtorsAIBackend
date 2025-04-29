@@ -5,6 +5,7 @@ from routes.refresh_token import public_router as refresh_token_router
 from routes.privacy import public_router as privacy_router
 from routes.dashboard import protected_router as dashboard_router
 from routes.webhook import public_router as webhook_router
+from routes.lead import protected_router as lead_router
 
 app = FastAPI()
 
@@ -25,6 +26,7 @@ app.include_router(webhook_router, prefix="/public")
 
 # Protected Routers
 app.include_router(dashboard_router, prefix="/private")
+app.include_router(lead_router, prefix="/private")
 
 # Root
 @app.get("/")
