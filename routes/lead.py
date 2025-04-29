@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from auth.dependencies import get_current_user  # assuming same as your current auth setup
 from llm.generator import generate_message 
-from twilio_client import send_sms
+from twilio_client.sender import send_sms
 
 protected_router = APIRouter(dependencies=[Depends(get_current_user)])
 
