@@ -1,20 +1,28 @@
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from auth.dependencies import get_current_user
+from twilio_client.sender import send_sms
 from openai import OpenAI
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Initialize Grok (xAI) client
+client = OpenAI(
+    api_key=os.getenv("XAI_API_KEY"),  # use your .env key here
+    base_url="https://api.x.ai/v1"
+)
 
 def generate_message(name: str):
-    prompt = f"You are a realtor assistant. Write a warm, professional welcome message for a new lead named {name} who has just shown interest in a property."
-
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "You are a helpful, friendly realtor assistant."},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=100
-    )
-    return response.choices[0].message.content.strip()
+    try:
+        response = client.chat.completions.create(
+            model="grok-2-latest",
+            messages=[
+                {"role": "system", "content": "You are a helpful real estate assistant."},
+                {"role": "user", "content": f"A new lead named {name} has shown interest in a property."},
+                {"role": "user", "content": "Send a warm, professional welcome message via SMS."},
+                {"role": "user", "content": "Keep it short, friendly, and human."}
+            ],
+            max_tokens=100
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        raise RuntimeError(f"Grok LLM error: {str(e)}")
