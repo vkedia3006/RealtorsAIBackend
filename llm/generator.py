@@ -1,9 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
-from auth.dependencies import get_current_user
-from twilio_client.sender import send_sms
 from openai import OpenAI
 import os
+
+load_dotenv()
 
 # Initialize Grok (xAI) client
 client = OpenAI(
