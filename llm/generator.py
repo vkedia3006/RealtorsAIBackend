@@ -5,16 +5,11 @@ from dotenv import load_dotenv
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-client = OpenAI(
-    api_key="",
-    base_url="https://api.x.ai/v1",
-)
-
 def generate_message(name: str):
     prompt = f"You are a realtor assistant. Write a warm, professional welcome message for a new lead named {name} who has just shown interest in a property."
 
     response = openai.ChatCompletion.create(
-        model="grok-2-latest",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful, friendly realtor assistant."},
             {"role": "user", "content": prompt}
