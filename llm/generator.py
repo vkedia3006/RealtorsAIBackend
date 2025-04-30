@@ -6,7 +6,7 @@ load_dotenv()
 
 # Initialize Grok (xAI) client
 client = OpenAI(
-    api_key=os.getenv("XAI_API_KEY"),  # use your .env key here
+    api_key=os.getenv("XAI_API_KEY"),
     base_url="https://api.x.ai/v1"
 )
 
