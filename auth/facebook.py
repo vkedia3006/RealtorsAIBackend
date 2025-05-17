@@ -4,6 +4,7 @@ from core.config import FB_APP_ID, FB_APP_SECRET, FB_REDIRECT_URI
 from core.database import collections
 from auth.jwt_handler import create_jwt_token
 import time
+import uuid
 
 def get_facebook_login_url():
     params = {
