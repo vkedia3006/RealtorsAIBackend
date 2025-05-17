@@ -6,95 +6,77 @@ from core.database import collections
 user_id = "7c947dd6-b12b-4ce1-b056-ffa3e8c42a92"
 
 async def seed():
-    # 1. Pages
-    page1 = await collections.pages.insert_one({
-        "user_id": user_id,
-        "name": "Urban Realty Group",
-        "imageUrl": "https://placekitten.com/64/64"
-    })
-    page1_id = page1.inserted_id
+    # 🔥 Delete old data
+    await collections.messages.delete_many({})
+    await collections.conversations.delete_many({})
+    await collections.ads.delete_many({})
+    await collections.pages.delete_many({})
 
-    page2 = await collections.pages.insert_one({
-        "user_id": user_id,
-        "name": "Coastal Properties",
-        "imageUrl": "https://placekitten.com/65/65"
-    })
-    page2_id = page2.inserted_id
+    print("🧹 Old data deleted.")
 
-    # 2. Ads
-    ad1 = await collections.ads.insert_one({
-        "page_id": page1_id,
-        "name": "Downtown Lofts"
-    })
-    ad1_id = ad1.inserted_id
+    # 📄 Insert Pages
+    pages_data = [
+        {"user_id": user_id, "name": "Urban Realty Group", "imageUrl": "https://placekitten.com/64/64"},
+        {"user_id": user_id, "name": "Coastal Properties", "imageUrl": "https://placekitten.com/65/65"},
+        {"user_id": user_id, "name": "Mountain View Estates", "imageUrl": "https://placekitten.com/66/66"},
+        {"user_id": user_id, "name": "Lakeside Realty", "imageUrl": "https://placekitten.com/67/67"},
+    ]
+    page_ids = [ (await collections.pages.insert_one(p)).inserted_id for p in pages_data ]
 
-    ad2 = await collections.ads.insert_one({
-        "page_id": page1_id,
-        "name": "Suburban Homes"
-    })
-    ad2_id = ad2.inserted_id
+    # 🏘 Insert Ads
+    ads_data = [
+        {"page_id": page_ids[0], "name": "Downtown Lofts"},
+        {"page_id": page_ids[0], "name": "Suburban Homes"},
+        {"page_id": page_ids[1], "name": "Oceanfront Condos"},
+        {"page_id": page_ids[1], "name": "Beach Houses"},
+        {"page_id": page_ids[2], "name": "Mountain Cabins"},
+        {"page_id": page_ids[2], "name": "Ski Chalets"},
+        {"page_id": page_ids[3], "name": "Lakefront Villas"},
+        {"page_id": page_ids[3], "name": "Woodland Cottages"},
+    ]
+    ad_ids = [ (await collections.ads.insert_one(ad)).inserted_id for ad in ads_data ]
 
-    ad3 = await collections.ads.insert_one({
-        "page_id": page2_id,
-        "name": "Oceanfront Condos"
-    })
-    ad3_id = ad3.inserted_id
+    # 💬 Insert Conversations
+    conversation_templates = [
+        ("John Smith", "https://placekitten.com/40/40", 0, True),
+        ("Sarah Johnson", "https://placekitten.com/41/41", 1, False),
+        ("Michael Brown", "https://placekitten.com/42/42", 2, True),
+        ("Emily Davis", "https://placekitten.com/43/43", 3, True),
+        ("Daniel Garcia", "https://placekitten.com/44/44", 4, False),
+        ("Laura Wilson", "https://placekitten.com/45/45", 5, True),
+        ("James Lee", "https://placekitten.com/46/46", 6, False),
+        ("Natalie Young", "https://placekitten.com/47/47", 7, True),
+    ]
+    conversation_ids = []
+    for name, img, i, unread in conversation_templates:
+        convo = await collections.conversations.insert_one({
+            "ad_id": ad_ids[i],
+            "userName": name,
+            "userImage": img,
+            "lastActive": datetime.now(UTC) - timedelta(hours=i),
+            "unread": unread
+        })
+        conversation_ids.append(convo.inserted_id)
 
-    ad4 = await collections.ads.insert_one({
-        "page_id": page2_id,
-        "name": "Beach Houses"
-    })
-    ad4_id = ad4.inserted_id
+    # 📥 Insert Messages
+    message_texts = [
+        "I'm interested in scheduling a viewing for this property.",
+        "What are the HOA fees for this listing?",
+        "Is the property still available?",
+        "Can I book a visit for next weekend?",
+        "Are pets allowed in this home?",
+        "Is there a virtual tour I can view?",
+        "How far is this from downtown?",
+        "Do these homes come with a garage?"
+    ]
+    messages = [{
+        "conversation_id": conversation_ids[i],
+        "sender": "user",
+        "text": message_texts[i],
+        "timestamp": datetime.now(UTC) - timedelta(hours=i)
+    } for i in range(len(conversation_ids))]
 
-    # 3. Conversations
-    conv1 = await collections.conversations.insert_one({
-        "ad_id": ad1_id,
-        "userName": "John Smith",
-        "userImage": "https://placekitten.com/40/40",
-        "lastActive": datetime.now(datetime.UTC),
-        "unread": True
-    })
-    conv1_id = conv1.inserted_id
-
-    conv2 = await collections.conversations.insert_one({
-        "ad_id": ad3_id,
-        "userName": "Sarah Johnson",
-        "userImage": "https://placekitten.com/41/41",
-        "lastActive": datetime.now(datetime.UTC) - timedelta(hours=1),
-        "unread": False
-    })
-    conv2_id = conv2.inserted_id
-
-    conv3 = await collections.conversations.insert_one({
-        "ad_id": ad4_id,
-        "userName": "Michael Brown",
-        "userImage": "https://placekitten.com/42/42",
-        "lastActive": datetime.now(datetime.UTC) - timedelta(hours=2),
-        "unread": True
-    })
-    conv3_id = conv3.inserted_id
-
-    # 4. Messages
-    await collections.messages.insert_many([
-        {
-            "conversation_id": conv1_id,
-            "sender": "user",
-            "text": "I'm interested in scheduling a viewing for the loft on Main Street.",
-            "timestamp": datetime.now(datetime.UTC)
-        },
-        {
-            "conversation_id": conv2_id,
-            "sender": "user",
-            "text": "What are the HOA fees for these condos?",
-            "timestamp": datetime.now(datetime.UTC) - timedelta(hours=1)
-        },
-        {
-            "conversation_id": conv3_id,
-            "sender": "user",
-            "text": "Do any of the chalets come with ski-in/ski-out access?",
-            "timestamp": datetime.now(datetime.UTC) - timedelta(hours=2)
-        }
-    ])
+    await collections.messages.insert_many(messages)
 
     print("✅ Dummy data seeded successfully.")
 
