@@ -1,6 +1,6 @@
 import asyncio
-from datetime import datetime, timedelta
-from core.database import collections  # using motor
+from datetime import datetime, timedelta, UTC
+from core.database import collections
 
 # User ID
 user_id = "7c947dd6-b12b-4ce1-b056-ffa3e8c42a92"
@@ -51,7 +51,7 @@ async def seed():
         "ad_id": ad1_id,
         "userName": "John Smith",
         "userImage": "https://placekitten.com/40/40",
-        "lastActive": datetime.utcnow(),
+        "lastActive": datetime.now(datetime.UTC),
         "unread": True
     })
     conv1_id = conv1.inserted_id
@@ -60,7 +60,7 @@ async def seed():
         "ad_id": ad3_id,
         "userName": "Sarah Johnson",
         "userImage": "https://placekitten.com/41/41",
-        "lastActive": datetime.utcnow() - timedelta(hours=1),
+        "lastActive": datetime.now(datetime.UTC) - timedelta(hours=1),
         "unread": False
     })
     conv2_id = conv2.inserted_id
@@ -69,7 +69,7 @@ async def seed():
         "ad_id": ad4_id,
         "userName": "Michael Brown",
         "userImage": "https://placekitten.com/42/42",
-        "lastActive": datetime.utcnow() - timedelta(hours=2),
+        "lastActive": datetime.now(datetime.UTC) - timedelta(hours=2),
         "unread": True
     })
     conv3_id = conv3.inserted_id
@@ -80,19 +80,19 @@ async def seed():
             "conversation_id": conv1_id,
             "sender": "user",
             "text": "I'm interested in scheduling a viewing for the loft on Main Street.",
-            "timestamp": datetime.utcnow()
+            "timestamp": datetime.now(datetime.UTC)
         },
         {
             "conversation_id": conv2_id,
             "sender": "user",
             "text": "What are the HOA fees for these condos?",
-            "timestamp": datetime.utcnow() - timedelta(hours=1)
+            "timestamp": datetime.now(datetime.UTC) - timedelta(hours=1)
         },
         {
             "conversation_id": conv3_id,
             "sender": "user",
             "text": "Do any of the chalets come with ski-in/ski-out access?",
-            "timestamp": datetime.utcnow() - timedelta(hours=2)
+            "timestamp": datetime.now(datetime.UTC) - timedelta(hours=2)
         }
     ])
 
