@@ -14,4 +14,12 @@ MONGO_URI = f"mongodb+srv://{username}:{password}@{cluster}/{database_name}?retr
 
 client = AsyncIOMotorClient(MONGO_URI)
 db = client[database_name]
-users_collection = db["users"]
+
+# Clean grouped access
+collections = SimpleNamespace(
+    users=db["users"],
+    conversations=db["conversations"],
+    messages=db["messages"],
+    pages=db["pages"],
+    ads=db["ads"]
+)

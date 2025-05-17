@@ -61,17 +61,18 @@ async def save_user(access_token: str) -> str:
             {"facebook_id": facebook_id},
             {"$set": {
                 "facebook_access_token": access_token,
-                "facebook_access_token_expires_at": expires_at,
-                "name": name,
-                "email": email
+                "facebook_access_token_expires_at": expires_at
             }}
         )
+        return existing_user["user_id"]
     else:
+        user_id = str(uuid.uuid4()) 
         await users_collection.insert_one({
+            "user_id": user_id,
             "facebook_id": facebook_id,
             "facebook_access_token": access_token,
             "facebook_access_token_expires_at": expires_at,
             "name": name,
             "email": email
         })
-    return facebook_id
+        return user_id
