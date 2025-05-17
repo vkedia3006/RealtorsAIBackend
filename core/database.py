@@ -1,6 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 from urllib.parse import quote_plus
+from types import SimpleNamespace
 
 MONGO_USER = quote_plus("vedant@user")
 MONGO_PASS = quote_plus("p@ssw/rd123")
