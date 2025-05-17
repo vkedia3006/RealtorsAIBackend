@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from auth.jwt_handler import decode_jwt_token
-from core.database import users_collection
+from core.database import collections
 
 bearer_scheme = HTTPBearer()
 
@@ -10,7 +10,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(b
     payload = decode_jwt_token(token)
     user_id = payload.get("user_id")
 
-    user = await users_collection.find_one({"facebook_id": str(user_id)})
+    user = await collections.users.find_one({"facebook_id": str(user_id)})
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
 

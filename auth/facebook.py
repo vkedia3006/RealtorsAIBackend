@@ -1,7 +1,7 @@
 import urllib.parse
 import requests
 from core.config import FB_APP_ID, FB_APP_SECRET, FB_REDIRECT_URI
-from core.database import users_collection
+from core.database import collections
 from auth.jwt_handler import create_jwt_token
 import time
 
@@ -54,10 +54,10 @@ async def save_user(access_token: str) -> str:
     expires_in_seconds = 60 * 24 * 60 * 60  # 60 days
     expires_at = int(time.time()) + expires_in_seconds
 
-    existing_user = await users_collection.find_one({"facebook_id": facebook_id})
+    existing_user = await collections.users.find_one({"facebook_id": facebook_id})
 
     if existing_user:
-        await users_collection.update_one(
+        await collections.users.update_one(
             {"facebook_id": facebook_id},
             {"$set": {
                 "facebook_access_token": access_token,
@@ -67,7 +67,7 @@ async def save_user(access_token: str) -> str:
         return existing_user["user_id"]
     else:
         user_id = str(uuid.uuid4()) 
-        await users_collection.insert_one({
+        await collections.users.insert_one({
             "user_id": user_id,
             "facebook_id": facebook_id,
             "facebook_access_token": access_token,
