@@ -3,11 +3,8 @@ import os
 from urllib.parse import quote_plus
 from types import SimpleNamespace
 
-MONGO_USER = quote_plus("vedant@user")
-MONGO_PASS = quote_plus("p@ssw/rd123")
-
 username = quote_plus("vedantkedia001")
-password = quote_plus("Titanium@9876")
+password = quote_plus("Silver@9876")
 cluster = "cluster0.0ahkyxj.mongodb.net"
 database_name = "sipcraft"
 
