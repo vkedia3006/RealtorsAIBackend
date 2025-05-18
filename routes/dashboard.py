@@ -41,7 +41,7 @@ async def get_dashboard_data(user=Depends(get_current_user)):
 
     last_message_map = {m["_id"]: m for m in messages}
 
-    # 5. Build flat conversation list (for conversation tab)
+        # 5. Build flat conversation list (for conversation tab)
     conversation_list = []
     for conv in conversations:
         msg_data = last_message_map.get(conv["_id"], {})
@@ -55,6 +55,12 @@ async def get_dashboard_data(user=Depends(get_current_user)):
             "timestamp": msg_data.get("lastActive"),
             "unread": conv.get("unread", False)
         })
+
+    # 🔽 Sort conversations: unread first, then by latest message timestamp
+    conversation_list = sorted(
+        conversation_list,
+        key=lambda c: (not c["unread"], c["timestamp"] or datetime.min),
+    )
 
     # 6. Attach adName to each conversation (ad_id → name)
     ad_id_to_name = {str(ad["_id"]): ad["name"] for ad in ads}
