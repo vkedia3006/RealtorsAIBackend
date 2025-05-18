@@ -20,7 +20,7 @@ async def process_lead_and_create_conversation(ad_id: str, lead_id: str, lead: d
     convo_result = await collections.conversations.insert_one(convo_doc)
 
     # 2. Generate + send message
-    message_text = generate_message(lead["name"])
+    message_text = generate_message(lead_id, lead["name"])
     send_sms(lead["phone"], message_text)
 
     # 3. Store message
