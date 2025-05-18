@@ -1,4 +1,4 @@
-import asyncio
+=import asyncio
 import random
 from datetime import datetime, timedelta, UTC
 from core.database import collections
@@ -28,6 +28,20 @@ message_texts = [
     "Do these homes come with a garage?"
 ]
 
+def random_timestamp(offset_days=5):
+    now = datetime.now(UTC)
+    delta = timedelta(days=random.randint(0, offset_days), hours=random.randint(0, 23), minutes=random.randint(0, 59))
+    return now - delta
+
+def make_meta():
+    t = random_timestamp()
+    return {
+        "meta": {
+            "created_at": t,
+            "modified_at": t
+        }
+    }
+
 async def seed():
     # 🔥 Delete old data
     await collections.messages.delete_many({})
@@ -43,7 +57,8 @@ async def seed():
             "user_id": user_id,
             "name": name,
             "imageUrl": f"https://placekitten.com/{random.randint(60,70)}/{random.randint(60,70)}",
-            "isDeleted": random.choice([True, False])
+            "isDeleted": random.choice([True, False]),
+            **make_meta()
         }
         result = await collections.pages.insert_one(page)
         page_ids.append(result.inserted_id)
@@ -56,7 +71,8 @@ async def seed():
             ad = {
                 "page_id": page_id,
                 "name": random.choice(ad_names),
-                "isDeleted": random.choice([True, False])
+                "isDeleted": random.choice([True, False]),
+                **make_meta()
             }
             result = await collections.ads.insert_one(ad)
             ad_ids.append(result.inserted_id)
@@ -70,8 +86,9 @@ async def seed():
                 "ad_id": ad_id,
                 "userName": random.choice(user_names),
                 "userImage": f"https://placekitten.com/{random.randint(40,50)}/{random.randint(40,50)}",
-                "lastActive": datetime.now(UTC) - timedelta(hours=random.randint(1, 24)),
-                "unread": random.choice([True, False])
+                "lastActive": random_timestamp(),
+                "unread": random.choice([True, False]),
+                **make_meta()
             }
             result = await collections.conversations.insert_one(convo)
             conversation_ids.append(result.inserted_id)
@@ -82,11 +99,12 @@ async def seed():
             "conversation_id": convo_id,
             "sender": "user",
             "text": random.choice(message_texts),
-            "timestamp": datetime.now(UTC) - timedelta(minutes=random.randint(1, 120))
+            "timestamp": random_timestamp(),
+            **make_meta()
         }
         await collections.messages.insert_one(message)
 
-    print("✅ Dummy data with soft-deletion flags seeded.")
+    print("✅ Dummy data with structured meta fields seeded.")
 
 if __name__ == "__main__":
     asyncio.run(seed())

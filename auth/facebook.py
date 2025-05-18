@@ -3,6 +3,7 @@ import requests
 from core.config import FB_APP_ID, FB_APP_SECRET, FB_REDIRECT_URI
 from core.database import collections
 from auth.jwt_handler import create_jwt_token
+from utils.db_meta_data import with_meta
 import time
 import uuid
 
@@ -60,20 +61,25 @@ async def save_user(access_token: str) -> str:
     if existing_user:
         await collections.users.update_one(
             {"facebook_id": facebook_id},
-            {"$set": {
-                "facebook_access_token": access_token,
-                "facebook_access_token_expires_at": expires_at
-            }}
+            {
+                "$set": {
+                    **with_meta({
+                        "facebook_access_token": access_token,
+                        "facebook_access_token_expires_at": expires_at
+                    }, is_update=True)
+                }
+            }
         )
         return existing_user["user_id"]
     else:
-        user_id = str(uuid.uuid4()) 
-        await collections.users.insert_one({
+        user_id = str(uuid.uuid4())
+        new_user = {
             "user_id": user_id,
             "facebook_id": facebook_id,
             "facebook_access_token": access_token,
             "facebook_access_token_expires_at": expires_at,
             "name": name,
             "email": email
-        })
+        }
+        await collections.users.insert_one(with_meta(new_user))
         return user_id
