@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from auth.dependencies import get_current_user
 from bson import ObjectId
 from core.database import collections
+from datetime import datetime
 
 protected_router = APIRouter(dependencies=[Depends(get_current_user)])
 
@@ -72,23 +73,36 @@ async def get_dashboard_data(user=Depends(get_current_user)):
             "name": ad["name"],
             "conversations": len(ad_convs),
             "lastActive": last_active,
-            "isDeleted": ad.get("isDeleted", False)
+            "isDeleted": ad.get("isDeleted", False),
+            "createdAt": ad.get("meta", {}).get("created_at", datetime.min)
         }
 
-    # 8. Build final page list
+    # 8. Build final page list (sorted)
     result_pages = []
     for page in pages:
-        page_ads = [
+        page_ads_unsorted = [
             ad_map[str(ad["_id"])]
             for ad in ads if ad["page_id"] == page["_id"]
         ]
+        page_ads_sorted = sorted(
+            page_ads_unsorted,
+            key=lambda a: (a["isDeleted"], a["created_at"]),
+        )
+
         result_pages.append({
             "id": str(page["_id"]),
             "name": page["name"],
             "imageUrl": page.get("imageUrl", "https://placekitten.com/64/64"),
-            "ads": page_ads,
-            "isDeleted": page.get("isDeleted", False)
+            "ads": page_ads_sorted,
+            "isDeleted": page.get("isDeleted", False),
+            "createdAt": page.get("meta", {}).get("created_at", datetime.min)
         })
+
+    # 🔽 Sort pages: non-deleted first, newest first
+    result_pages = sorted(
+        result_pages,
+        key=lambda p: (p["isDeleted"], p["created_at"]),
+    )
 
     return {
         "pages": result_pages,
