@@ -72,7 +72,7 @@ async def get_dashboard_data(user=Depends(get_current_user)):
             "name": ad["name"],
             "conversations": len(ad_convs),
             "lastActive": last_active,
-            "is_deleted?": ad.get("isDeleted", False)
+            "is_deleted": ad.get("isDeleted", False)
         }
 
     # 8. Build final page list
@@ -87,7 +87,7 @@ async def get_dashboard_data(user=Depends(get_current_user)):
             "name": page["name"],
             "imageUrl": page.get("imageUrl", "https://placekitten.com/64/64"),
             "ads": page_ads,
-            "is_deleted?": page.get("isDeleted", False)
+            "is_deleted": page.get("isDeleted", False)
         })
 
     return {
