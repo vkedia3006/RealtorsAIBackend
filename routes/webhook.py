@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, status
+from fastapi import APIRouter, Request, Query, status
 from fastapi.responses import PlainTextResponse
 from models.webhook_model import WebhookData
 from core.config import VERIFY_TOKEN
