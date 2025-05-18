@@ -86,7 +86,7 @@ async def get_dashboard_data(user=Depends(get_current_user)):
         ]
         page_ads_sorted = sorted(
             page_ads_unsorted,
-            key=lambda a: (a["isDeleted"], a["created_at"]),
+            key=lambda a: (a["isDeleted"], a["createdAt"]),
         )
 
         result_pages.append({
@@ -101,7 +101,7 @@ async def get_dashboard_data(user=Depends(get_current_user)):
     # 🔽 Sort pages: non-deleted first, newest first
     result_pages = sorted(
         result_pages,
-        key=lambda p: (p["isDeleted"], p["created_at"]),
+        key=lambda p: (p["isDeleted"], p["createdAt"]),
     )
 
     return {
