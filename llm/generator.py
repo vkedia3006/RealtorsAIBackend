@@ -1,6 +1,8 @@
 from openai import OpenAI
 from core.database import collections
 from bson import ObjectId
+from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
