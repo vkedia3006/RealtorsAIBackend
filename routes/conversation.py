@@ -8,6 +8,8 @@ protected_router = APIRouter(dependencies=[Depends(get_current_user)])
 
 async def get_conversations_for_ad(ad_id: str, user=Depends(get_current_user)):
     user_id = user["user_id"]
+    
+    print(ObjectId(ad_id))
 
     # 1. Validate and find ad
     ad = await collections.ads.find_one({"_id": ObjectId(ad_id)})
@@ -15,6 +17,7 @@ async def get_conversations_for_ad(ad_id: str, user=Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="Ad not found")
 
     # 2. Find associated page
+    print((ad["page_id"]))
     page = await collections.pages.find_one({"_id": ad["page_id"], "user_id": user_id})
     if not page:
         raise HTTPException(status_code=403, detail="Unauthorized access to ad")
