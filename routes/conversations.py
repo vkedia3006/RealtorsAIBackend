@@ -36,7 +36,7 @@ async def get_conversations_for_ad(ad_id: str, user=Depends(get_current_user)):
             "id": str(msg["_id"]),
             "sender": msg["sender"],
             "text": msg["text"],
-            "timestamp": msg["timestamp"]
+            "timestamp": msg.get("meta", {}).get("created_at")
         })
 
     # 6. Structure final response

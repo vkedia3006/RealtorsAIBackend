@@ -52,7 +52,7 @@ async def get_dashboard_data(user=Depends(get_current_user)):
             "adId": str(conv["ad_id"]),
             "adName": "",  # Will be added below
             "lastMessage": msg_data.get("lastMessage", ""),
-            "timestamp": msg_data.get("lastActive"),
+            "timestamp": msg_data.get("meta", {}).get("created_at"),
             "unread": conv.get("unread", False)
         })
 
