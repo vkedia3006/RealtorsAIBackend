@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import JSONResponse
-from twilio.twiml.messaging_response import MessagingResponse
 from datetime import datetime, UTC
 from bson import ObjectId
-from twilio_client.sender import send_sms
 
-from core.database import collections, with_meta
+from core.database import collections
+from utils.db_meta_data import with_meta
 from llm.generator import generate_message
+from twilio_client.sender import send_sms
 
 public_router = APIRouter()
 
