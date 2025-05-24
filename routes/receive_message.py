@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Request, HTTPException
-from fastapi.responses import Response
+from fastapi.responses import JSONResponse
 from twilio.twiml.messaging_response import MessagingResponse
 from datetime import datetime, UTC
 from bson import ObjectId
+from twilio_client.sender import send_sms
 
 from core.database import collections, with_meta
 from llm.generator import generate_message
@@ -42,9 +43,7 @@ async def incoming_sms(request: Request):
         "sender": "agent",
         "text": reply_text
     }))
+    
+    send_sms(from_number, reply_text)
 
-    # 5. Build TwiML response
-    twiml = MessagingResponse()
-    twiml.message(reply_text)
-
-    return Response(content=str(twiml), media_type="application/xml")
+    return JSONResponse(status_code=200, content={"message": "Message sent successfully"})

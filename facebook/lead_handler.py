@@ -12,6 +12,8 @@ async def process_lead_and_create_conversation(ad_id: str, lead_id: str, lead: d
     convo_doc = with_meta({
         "ad_id": ObjectId(ad_id),
         "userName": lead["name"],
+        "phone": lead["phone"],
+        "email": lead["email"],
         "userImage": "https://placekitten.com/40/40",
         "lastActive": now,
         "unread": True,
@@ -27,8 +29,7 @@ async def process_lead_and_create_conversation(ad_id: str, lead_id: str, lead: d
     await collections.messages.insert_one(with_meta({
         "conversation_id": convo_result.inserted_id,
         "sender": "agent",
-        "text": message_text,
-        "timestamp": now
+        "text": message_text
     }))
 
     return convo_result.inserted_id
