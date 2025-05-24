@@ -6,7 +6,7 @@ from routes.privacy import public_router as privacy_router
 from routes.dashboard import protected_router as dashboard_router
 from routes.webhook import public_router as webhook_router
 from routes.conversations import protected_router as conversations_router
-from routes.sms import protected_router as sms_router
+from routes.receive_message import protected_router as sms_router
 
 app = FastAPI()
 
